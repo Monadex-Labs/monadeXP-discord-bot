@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType } = require('discord.js');
-const welcome = require('../../schemas/welcome');
+const welcome = require('../../schemas/xps');
 
 // Command data
 const commandData = new SlashCommandBuilder()

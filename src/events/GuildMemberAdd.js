@@ -1,4 +1,4 @@
-const WelcomeSchema = require('../schemas/welcome');
+const WelcomeSchema = require('../schemas/xps');
 
 module.exports = {
 	name: 'guildMemberAdd',

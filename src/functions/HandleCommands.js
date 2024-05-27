@@ -4,7 +4,7 @@ const fs = require('fs');
 
 module.exports = (client) => {
     // Define a function on the client to handle loading and registering commands
-    client.handleCommands = async (token, commandFolders, path, clientId, guildId = null) => {
+    client.handleCommands = async (token, commandFolders, path, clientId, guildId = "1244759142401446069") => {
         // Initialize an array to hold the commands for registration
         client.commandArray = [];
 
