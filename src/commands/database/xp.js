@@ -27,6 +27,6 @@ const Xps = require('../../schemas/xps');
                 const { user } = interaction; `<@>`
                 const xp=  await Xps.findOne({user: `<@${user.id}>`})
                 console.log("xps", xp)
-                await interaction.reply(`Hello ${user.displayName}! you have ${xp.points} Xps`);
+                await interaction.reply(`Gmonad ${user.displayName}! you have **${xp.points}** Xps`);
             }    
         };
