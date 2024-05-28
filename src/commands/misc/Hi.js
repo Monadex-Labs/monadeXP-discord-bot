@@ -8,6 +8,7 @@ module.exports = {
 		async execute(interaction) {
 		
 		const { user } = interaction;
+		console.log("hi", user)
 		await interaction.reply(`Hello ${user.displayName}!`);
-	},
+		},
 };

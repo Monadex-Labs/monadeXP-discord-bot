@@ -37,22 +37,30 @@ const commandData = new SlashCommandBuilder()
 async function executeCommand(interaction) {
     
     // Check if the user has permission to use this command to distribute XPs
-    console.log("sosos",interaction.member.permissions.has(PermissionsBitField.Flags.Administrator))
-    if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-        return await interaction.reply({ content: "You don't have permission to use this command", ephemeral: true });
-    }
+    // console.log("sosos",interaction.member.permissions.has(PermissionsBitField.Flags.Administrator))
+    // if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+    //     return await interaction.reply({ content: "You don't have permission to use this command", ephemeral: true });
+    // }
 
 
     const amount = interaction.options.getNumber('amount');
     const userID = interaction.options.getString('user');
 
-    await distribution.create({
 
-        Guild: interaction.guild.id,
-        user: userID,
-        points : amount 
+    // create if the useriD is not exist on the db or update if it exist
+    if(await distribution.findOne({user: userID})) {
+        await distribution.updateOne({user: userID}, {$inc: {points: amount}});
+    } else {
 
-    });
+        await distribution.create({
+
+            Guild: interaction.guild.id,
+            user: userID,
+            points : amount 
+    
+        });
+    }
+    
     
     await interaction.reply(`You have sent ${amount} XP to ${userID}.`);
 }

@@ -2,6 +2,11 @@ const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType } = 
 const standing = require('../../schemas/xps');
 
 
+
+
+
+    // Exporting module
+module.exports = {
 /**
  *      
  *      / Standings Command => return the standings of the server
@@ -9,15 +14,26 @@ const standing = require('../../schemas/xps');
  *  
  */ 
 
-const commandData = new SlashCommandBuilder()
+data: new SlashCommandBuilder()
     .setName('standings')
-    .setDescription('standings of the server')
+    .setDescription('return the standings of the server'),
 
 
+    async execute(interaction) {
+        const stand = [];
 
+        // return all the data on the DataBase of every user => Will need a upgrade on MongoDB servers to have more Storage
+        const data = await standing.find({});
 
-
-    // Exporting module
-module.exports = {
-    data: commandData,
+        // loop through the data
+        data.map((value) => {
+            // filter the object
+            const { user, points } = value;
+            
+            stand.push({ user, points });
+            // push the data in an array
+        
+        })
+        console.log(stand)
+    }    
 };
