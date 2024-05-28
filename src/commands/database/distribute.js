@@ -21,7 +21,7 @@ const commandData = new SlashCommandBuilder()
             .addStringOption(option =>
                 option
                     .setName('user')
-                    .setDescription('The message that gonna be sent. Note: use {member} to ping and (member) to show username')
+                    .setDescription('which user you want to reward')
                     .setRequired(true))
                     .addNumberOption(option => 
                         option
@@ -37,10 +37,9 @@ const commandData = new SlashCommandBuilder()
 async function executeCommand(interaction) {
     
     // Check if the user has permission to use this command to distribute XPs
-    // console.log("sosos",interaction.member.permissions.has(PermissionsBitField.Flags.Administrator))
-    // if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-    //     return await interaction.reply({ content: "You don't have permission to use this command", ephemeral: true });
-    // }
+    if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+        return await interaction.reply({ content: "You don't have permission to use this command", ephemeral: true });
+    }
 
 
     const amount = interaction.options.getNumber('amount');
