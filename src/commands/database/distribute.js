@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType  } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, ChannelType } = require('discord.js');
 const distribution = require('../../schemas/xps');
 
 
@@ -7,72 +7,59 @@ const distribution = require('../../schemas/xps');
  *      / Distribute Command => return the standings of the server
  *      / PUT WRITE DATA TO THE DATABASE /Distribute [user] [number]
  *  
- */ 
+ */
 
 
 const commandData = new SlashCommandBuilder()
     .setName('distribute')
     .setDescription('Distribute XP to users')
-    .addSubcommand(subcommand => 
-        
+    .addSubcommand(subcommand =>
+
         subcommand
-            .setName('setup')
-            .setDescription('Sets up the welcome system')
-            .addStringOption(option => 
+            .setName('xp')
+            .setDescription('distribute XP to users')
+            .addStringOption(option =>
                 option
                     .setName('user')
                     .setDescription('The message that gonna be sent. Note: use {member} to ping and (member) to show username')
                     .setRequired(true))
-            .addStringOption(option => 
-                option
-                    .setName('reaction')
-                    .setDescription('The reaction for your system')
-                    .setRequired(false)))
+                    .addNumberOption(option => 
+                        option
+                                    .setName('amount')
+                                    .setDescription('The amount of xps you want to reward')
+                                    .setRequired(true)
+                                ))
 
 
-    // Command execution
+                    
+
+// Command execution
 async function executeCommand(interaction) {
+    
+    // Check if the user has permission to use this command to distribute XPs
+    console.log("sosos",interaction.member.permissions.has(PermissionsBitField.Flags.Administrator))
     if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
         return await interaction.reply({ content: "You don't have permission to use this command", ephemeral: true });
     }
 
-    const sub = interaction.options.getSubcommand();
-    const data = await welcome.findOne({ Guild: interaction.guild.id });
 
-    if (sub === 'setup') {
-        await setupCommand(interaction, data);
-    } else if (sub === 'disable') {
-        await disableCommand(interaction, data);
-    }
-}
+    const amount = interaction.options.getNumber('amount');
+    const userID = interaction.options.getString('user');
 
-
-async function setupCommand(interaction, data) {
-    if (data) {
-        return await interaction.reply({
-            content: 'The welcome system has already been setup use **/welcome disable** to disable the welcome system.', 
-            ephemeral: true
-        });
-    }
-
-    const channel = interaction.options.getChannel('channel');
-    const message = interaction.options.getString('message');
-    const reaction = interaction.options.getString('reaction');
-    const userID = message.member.id;
-    
     await distribution.create({
 
         Guild: interaction.guild.id,
-        Channel: channel.id,
         user: userID,
-        // points : 
-        
-    });
+        points : amount 
 
-    const embed = buildEmbed("#f7f7f7", `Your welcome system has been setup with the message: **\`${message}\`** and it will be sent to the ${channel} channel.`);
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    });
+    
+    await interaction.reply(`You have sent ${amount} XP to ${userID}.`);
 }
-    // Exporting module
+
+
+
+// Exporting module
 module.exports = {
     data: commandData,
     execute: executeCommand
