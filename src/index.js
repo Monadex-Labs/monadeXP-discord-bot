@@ -28,7 +28,6 @@ const commandFolders = fs.readdirSync('./src/commands');
 const isDev = process.env.DEVELOPMENT; // Check if running in development mode
 const clientId = process.env.CLIENT_ID; // Client ID for the bot
 const botToken = process.env.BOT_TOKEN; // Token for the bot
-
 // Additional testing environment variables
 const testToken = process.env.TEST_TOKEN; // Token for testing
 const testClientId = process.env.TEST_CLIENT_ID; // Client ID for testing
