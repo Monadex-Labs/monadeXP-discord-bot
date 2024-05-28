@@ -10,7 +10,7 @@ const Xps = require('../../schemas/xps');
  */ 
 
 const commandData = new SlashCommandBuilder()
-    .setName('XP')
+    .setName('xp')
     .setDescription('return XP of the nads')
 
 
