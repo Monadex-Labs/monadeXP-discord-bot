@@ -29,6 +29,14 @@ async function executeCommand(interaction) {
     const amount = interaction.options.getNumber('amount');
     const userID = interaction.options.getString('user');
     
+    // Ensure amount is an integer
+    if (!Number.isInteger(amount) || amount <= 0) {
+        return await interaction.reply({ content: "Please enter a valid whole number for the amount.", ephemeral: true });
+    }
+    if(amount > 100){
+        return await interaction.reply({ content: "you can only send 100 Xps at a time", ephemeral: true });
+    }
+    
     // check if the user has enough points before trandsfering them
     const { user } = interaction;
     const xp=  await send.findOne({user: `<@${user.id}>`})
@@ -54,7 +62,7 @@ async function executeCommand(interaction) {
         await send.updateOne({user: `<@${user.id}>`}, {$inc: {points: -amount}});
     }
 
-    await interaction.reply(`You have sent ${amount} XP to ${userID}.`);
+    await interaction.reply({content :`You have sent ${amount} XP to ${userID}.`, ephemeral: true });
 }
 
 module.exports = {
