@@ -52,7 +52,6 @@ async function executeCommand(interaction) {
     let recipientData = await XPModel.findOne({ user: userID });
     !recipientData
         ? (recipientData = new XPModel({
-              guild: interaction.guild.id,
               user: userID,
               points: amount,
           }))

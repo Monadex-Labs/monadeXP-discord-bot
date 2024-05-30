@@ -1,7 +1,7 @@
 const XPModel = require("../schemas/XPModel");
 
 module.exports = {
-    name: "guildMemberAdd",
+    name: "MemberAdd",
     async execute(member) {
         const data = await XPModel.findOne({ guild: member.guild.id });
         if (!data) return;
