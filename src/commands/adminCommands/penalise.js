@@ -29,6 +29,7 @@ const commandData = new SlashCommandBuilder()
 
 // command execution
 async function executeCommand(interaction) {
+    // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
 
     const userID = interaction.options.getString("user");
@@ -39,21 +40,23 @@ async function executeCommand(interaction) {
     if (!interaction.member.roles.cache.some((role) => role.id === ADMIN_ROLE))
         return await interaction.followUp("You don't have permission to use this command");
 
-    // ensure amount is an integer
+    // ensure amount is an integer and greater than 0
     if (!Number.isInteger(amount) || amount <= 0)
-        return await interaction.followUp("Please enter a valid whole number for the amount.");
+        return await interaction.followUp("Please enter a valid whole number for the amount");
 
     // check if the user exists
     const userData = await XPModel.findOne({ user: userID });
-    if (!userData) {
-        return await interaction.followUp(`${userID}'s balance is 0`);
-    } else {
-        // check if the balance is greater than or equal to the penalty amount
+    if (!userData) return await interaction.followUp(`${userID} doesn't have any XP`);
+    else {
+        // check if the balance is less than the penalty amount
+        // if yes, penalisation fails
         if (userData.points < amount)
             return await interaction.followUp(
                 `Penalty amount exceeds the ${userID}'s current balance`,
             );
         else {
+            // if the user's point balance is greater than or equal to the penalisation amount
+            // deduct points
             userData.points -= amount;
             await userData.save();
 
@@ -64,6 +67,7 @@ async function executeCommand(interaction) {
     }
 }
 
+// export module
 module.exports = {
     data: commandData,
     execute: executeCommand,

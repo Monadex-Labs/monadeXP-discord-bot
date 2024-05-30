@@ -1,7 +1,9 @@
 const ADMIN_ROLE = "1245068458891415562";
 const EMBED_COLOR = "#8133FF";
+const LEADERBOARD_LIMIT = 20;
 
 module.exports = {
     ADMIN_ROLE,
     EMBED_COLOR,
+    LEADERBOARD_LIMIT,
 };
