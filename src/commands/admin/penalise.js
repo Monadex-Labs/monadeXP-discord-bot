@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
+const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
@@ -28,11 +30,11 @@ const commandData = new SlashCommandBuilder()
     );
 
 // command execution
-async function executeCommand(interaction) {
+async function executeCommand(interaction, client) {
     // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
 
-    const userID = interaction.options.getString("user");
+    const userId = interaction.options.getString("user");
     const amount = interaction.options.getNumber("amount");
     const reason = interaction.options.getString("reason");
 
@@ -44,24 +46,31 @@ async function executeCommand(interaction) {
     if (!Number.isInteger(amount) || amount <= 0)
         return await interaction.followUp("Please enter a valid whole number for the amount");
 
-    // check if the user exists
-    const userData = await XPModel.findOne({ user: userID });
-    if (!userData) return await interaction.followUp(`${userID} doesn't have any XP`);
+    // check if the userId is a valid guild member
+    const exists = await userExists(client, extractId(userId));
+    if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
+
+    // check if the user exists in the database
+    const userData = await findOneFromDb({ user: userId });
+    if (!userData) return await interaction.followUp(`${userId} doesn't have any XP`);
     else {
         // check if the balance is less than the penalty amount
         // if yes, penalisation fails
         if (userData.points < amount)
             return await interaction.followUp(
-                `Penalty amount exceeds the ${userID}'s current balance`,
+                `Penalty amount exceeds the ${userId}'s current balance`,
             );
         else {
             // if the user's point balance is greater than or equal to the penalisation amount
             // deduct points
             userData.points -= amount;
-            await userData.save();
+
+            const saved = await saveToDb(userData);
+            if (!saved)
+                return await interaction.followUp(`Failed to penalise user due to database error`);
 
             return await interaction.followUp(
-                `${userID} has been penalised for ${amount} XP\nReason for penalisation: ${reason}`,
+                `${userId} has been penalised for ${amount} XP\nReason for penalisation: ${reason}`,
             );
         }
     }

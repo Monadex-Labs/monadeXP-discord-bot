@@ -1,3 +1,5 @@
+const { ActivityType } = require("discord.js");
+const { PresenceUpdateStatus } = require("discord.js");
 const mongoose = require("mongoose");
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -23,22 +25,7 @@ module.exports = {
 
         console.log(`${client.user.displayName} is online!`);
 
-        // The array of activities for the bot to cycle through
-        const activities = ["Playing", "Streaming", "Listening", "Watching", "Custom", "Competing"];
-
-        setInterval(() => {
-            // Randomize the activity
-            const status = activities[Math.floor(Math.random() * activities.length)];
-            /**
-             * Bot Status Types:
-             * 0 = Playing
-             * 1 = Streaming
-             * 2 = Listening
-             * 3 = Watching
-             * 4 = Custom
-             * 5 = Competing
-             */
-            client.user.setPresence({ activities: [{ type: 0, name: `${status}` }] });
-        }, 10000); // 10 seconds
+        client.user.setActivity("activities", { type: ActivityType.Watching });
+        client.user.setStatus(PresenceUpdateStatus.Online);
     },
 };

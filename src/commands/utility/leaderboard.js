@@ -17,7 +17,14 @@ async function executeCommand(interaction) {
     await interaction.deferReply({ ephemeral: true });
 
     // get 20 users with the highest XP from the database
-    const sortedUsers = await XPModel.find().sort({ points: -1 }).limit(LEADERBOARD_LIMIT);
+    let sortedUsers;
+    try {
+        sortedUsers = await XPModel.find().sort({ points: -1 }).limit(LEADERBOARD_LIMIT);
+    } catch (error) {
+        console.error(error);
+        return await interaction.reply("Failed to display leaderboard due to database error");
+    }
+
     let display = "";
     const leaderboardEmbed = new EmbedBuilder().setTitle("Leaderboard").setColor(EMBED_COLOR);
     let count = 1;

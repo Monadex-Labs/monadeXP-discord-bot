@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
+const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 const { EMBED_COLOR } = require("../../utils/data");
 
@@ -19,25 +21,30 @@ const commandData = new SlashCommandBuilder()
     .addStringOption((option) => option.setName("user").setDescription("The user's discord ID"));
 
 // command execution
-async function executeCommand(interaction) {
+async function executeCommand(interaction, client) {
     // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
 
-    let userID = interaction.options.getString("user");
-    if (!userID) userID = `<@${interaction.member.id}>`;
+    let userId = interaction.options.getString("user");
+    if (!userId) userId = `<@${interaction.member.id}>`;
 
-    let userData = await XPModel.findOne({ user: userID });
+    // check if the userId is a valid guild member
+    const exists = await userExists(client, extractId(userId));
+    if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
+
+    let userData = await findOneFromDb({ user: userId });
     if (!userData)
         userData = new XPModel({
-            user: userID,
+            user: userId,
             points: 0,
         });
-    await userData.save();
+    await saveToDb(userData);
 
     const profileEmbed = new EmbedBuilder()
         .setTitle("Profile")
         .setColor(EMBED_COLOR)
-        .addFields({ name: "User", value: `${userID}` })
+        .setThumbnail((await client.users.fetch(extractId(userId))).displayAvatarURL())
+        .addFields({ name: "User", value: `${userId}` })
         .addFields({ name: "Points", value: `${userData.points}` })
         .addFields({ name: "Wallet Address", value: `${userData.walletAddress ?? ZERO_ADDRESS}` });
 

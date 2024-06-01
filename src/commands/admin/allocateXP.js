@@ -1,5 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
+const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
@@ -23,11 +25,11 @@ const commandData = new SlashCommandBuilder()
     );
 
 // command execution
-async function executeCommand(interaction) {
+async function executeCommand(interaction, client) {
     // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
 
-    const userID = interaction.options.getString("user");
+    const userId = interaction.options.getString("user");
     const amount = interaction.options.getNumber("amount");
 
     // check if the user has the right role to use this command
@@ -38,19 +40,25 @@ async function executeCommand(interaction) {
     if (!Number.isInteger(amount) || amount <= 0)
         return await interaction.followUp("Please enter a valid whole number for the amount");
 
-    // create user if the userID doesn't exist on the database
-    let userData = await XPModel.findOne({ user: userID });
+    // check if the userId is a valid guild member
+    const exists = await userExists(client, extractId(userId));
+    if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
+
+    // create user if the userId doesn't exist on the database
+    let userData = await findOneFromDb({ user: userId });
     !userData
         ? (userData = new XPModel({
-              user: userID,
+              user: userId,
               points: amount,
           }))
         : (userData.points += amount); // or update, if it exists
 
-    await userData.save();
+    // save data to database
+    const saved = await saveToDb(userData);
+    if (!saved) return await interaction.followUp(`Failed to allocate XP due to database error`);
 
     return await interaction.followUp(
-        `<@${interaction.member.id}>, you have sent ${amount} XP to ${userID}`,
+        `<@${interaction.member.id}>, you have sent ${amount} XP to ${userId}`,
     );
 }
 

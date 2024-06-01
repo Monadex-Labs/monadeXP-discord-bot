@@ -1,5 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
+const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 /**
@@ -25,20 +27,22 @@ async function executeCommand(interaction) {
     await interaction.deferReply({ ephemeral: true });
 
     const walletAddress = interaction.options.getString("address");
-    const userID = `<@${interaction.member.id}>`;
+    const userId = `<@${interaction.member.id}>`;
 
-    let userData = await XPModel.findOne({ user: userID });
+    let userData = await findOneFromDb({ user: userId });
     !userData
         ? (userData = new XPModel({
-              user: userID,
+              user: userId,
               points: 0,
               walletAddress,
           }))
         : (userData.walletAddress = walletAddress);
 
-    userData.save();
+    const saved = await saveToDb(userData);
+    if (!saved)
+        return await interaction.followUp(`Cannot update wallet address due to database error`);
 
-    return await interaction.followUp(`${userID}'s wallet address successfully updated`);
+    return await interaction.followUp(`${userId}'s wallet address was successfully updated`);
 }
 
 // export module
