@@ -1,8 +1,7 @@
 // Import necessary discord.js classes, fs for file system operations, and dotenv for environment variables
-const { Client, Collection, GatewayIntentBits, Events } = require("discord.js");
+const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const dotenv = require("dotenv");
-
 dotenv.config(); // Load environment variables from .env file
 
 // Initialize Discord client with intents required for the bot to function properly

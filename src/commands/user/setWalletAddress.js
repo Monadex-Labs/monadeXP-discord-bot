@@ -1,8 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
-const { extractId, userExists } = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 /**
  * Slash Command: /setWalletAddress [address]

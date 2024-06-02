@@ -5,7 +5,7 @@ const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
- * Slash Command: /allocate xp [user] [amount]
+ * Slash Command: /allocate-mxp [user] [amount]
  * Function: Allocates `amount` xp to `user`
  *
  * case 1: Recipient doesn't exist in the database
@@ -15,13 +15,13 @@ const { ADMIN_ROLE } = require("../../utils/data");
  */
 
 const commandData = new SlashCommandBuilder()
-    .setName("allocate-xp")
-    .setDescription("Allocate XP to a single user")
+    .setName("allocate-mxp")
+    .setDescription("Allocate   MXP to a single user")
     .addStringOption((option) =>
-        option.setName("user").setDescription("The XP recipient").setRequired(true),
+        option.setName("user").setDescription("The MXP recipient").setRequired(true),
     )
     .addNumberOption((option) =>
-        option.setName("amount").setDescription("The XP amount").setRequired(true),
+        option.setName("amount").setDescription("The MXP amount").setRequired(true),
     );
 
 // command execution
@@ -55,10 +55,10 @@ async function executeCommand(interaction, client) {
 
     // save data to database
     const saved = await saveToDb(userData);
-    if (!saved) return await interaction.followUp(`Failed to allocate XP due to database error`);
+    if (!saved) return await interaction.followUp(`Failed to allocate MXP due to database error`);
 
     return await interaction.followUp(
-        `<@${interaction.member.id}>, you have sent ${amount} XP to ${userId}`,
+        `<@${interaction.member.id}>, you have sent ${amount} MXP to ${userId}`,
     );
 }
 

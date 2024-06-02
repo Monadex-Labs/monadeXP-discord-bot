@@ -4,7 +4,7 @@ const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const XPModel = require("../../schemas/XPModel");
 
 /**
- * Slash Command: /gift-xp [user] [amount]
+ * Slash Command: /gift-mxp [user] [amount]
  * Function: transfer `amount` xp to `user`
  *
  * case 1: Sender doesn't exist in the database
@@ -18,13 +18,13 @@ const XPModel = require("../../schemas/XPModel");
  */
 
 const commandData = new SlashCommandBuilder()
-    .setName("gift-xp")
-    .setDescription("Gift XP to other another user")
+    .setName("gift-mxp")
+    .setDescription("Gift MXP to other another user")
     .addStringOption((option) =>
-        option.setName("user").setDescription("The XP recipient").setRequired(true),
+        option.setName("user").setDescription("The MXP recipient").setRequired(true),
     )
     .addNumberOption((option) =>
-        option.setName("amount").setDescription("The XP amount").setRequired(true),
+        option.setName("amount").setDescription("The MXP amount").setRequired(true),
     );
 
 // command execution
@@ -40,7 +40,7 @@ async function executeCommand(interaction, client) {
     if (!Number.isInteger(amount) || amount <= 0)
         return await interaction.followUp("Please enter a valid whole number for the amount.");
 
-    if (userId === senderId) return await interaction.followUp("You cannot gift XP to yourself");
+    if (userId === senderId) return await interaction.followUp("You cannot gift MXP to yourself");
 
     // check if the userId is a valid guild member
     const exists = await userExists(client, extractId(userId));
@@ -65,12 +65,12 @@ async function executeCommand(interaction, client) {
 
     const savedSenderData = await saveToDb(senderData);
     if (!savedSenderData)
-        return await interaction.followUp(`Failed to gift XP due to database error`);
+        return await interaction.followUp(`Failed to gift MXP due to database error`);
     const savedRecipientData = await saveToDb(recipientData);
     if (!savedRecipientData)
-        return await interaction.followUp(`Failed to gift XP due to database error`);
+        return await interaction.followUp(`Failed to gift MXP due to database error`);
 
-    return await interaction.followUp(`${senderId} has gifted ${amount} XP to ${userId}.`);
+    return await interaction.followUp(`${senderId} has gifted ${amount} MXP to ${userId}.`);
 }
 
 // export module
