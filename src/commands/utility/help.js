@@ -22,7 +22,7 @@ async function executeCommand(interaction) {
         .setColor(EMBED_COLOR)
         .setImage("attachment://monadexp.png")
         .setDescription(
-            "Being an active contributor in the Monadex community will allow you to earn XP rewards." +
+            "Being an active contributor in the Monadex community will allow you to earn MXP rewards." +
                 `You can read more about it [here](${monadexpLink}). Additionally, here is a list of all the commands available to you`,
         )
         // the available commands will be added as fields
@@ -32,19 +32,19 @@ async function executeCommand(interaction) {
         })
         .addFields({
             name: "/gift-xp",
-            value: "Allows you to gift some of your XP to another user",
+            value: "Allows you to gift some of your MXP to another user",
         })
         .addFields({
             name: "/set-wallet-address",
-            value: "Allows you to set your wallet address. At the end of the XP program, your portion of the $MDX rewards will be directed to this account. So make sure it is a valid Monad address!",
+            value: "Allows you to set your wallet address. At the end of the MXP program, your portion of the $MDX rewards will be directed to this account. So make sure it is a valid Monad address!",
         })
         .addFields({
             name: "/leaderboard",
             value: "Displays the MonadeXP leaderboard",
         })
         .addFields({
-            name: "/allocate-xp",
-            value: "Allocates XP to a single user. Admin-only command",
+            name: "/allocate-mxp",
+            value: "Allocates MXP to a single user. Admin-only command",
         })
         .addFields({
             name: "/penalise",

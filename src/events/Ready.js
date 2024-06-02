@@ -1,6 +1,8 @@
 const { ActivityType } = require("discord.js");
 const { PresenceUpdateStatus } = require("discord.js");
 const mongoose = require("mongoose");
+const { process } = require("process");
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
 module.exports = {

@@ -8,7 +8,7 @@ module.exports = (client) => {
      * @param {string[]} eventFiles - An array containing the filenames of event modules.
      * @param {string} path - The base path to the directory where event modules are located.
      */
-    client.handleEvents = async (eventFiles, path) => {
+    client.handleEvents = async (eventFiles /*, path */) => {
         // Loop through each file in the eventFiles array
         for (const file of eventFiles) {
             // Dynamically require the event module using its filename

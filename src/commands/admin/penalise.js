@@ -1,11 +1,10 @@
 const { SlashCommandBuilder } = require("discord.js");
-const XPModel = require("../../schemas/XPModel");
 const { extractId, userExists } = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
- * Slash Command: /penalise xp [user] [amount]
+ * Slash Command: /penalise [user] [amount]
  * Function: Applies a penalty of `amount` xp on `user`
  *
  * case 1: User doesn't exist in the database
@@ -70,7 +69,7 @@ async function executeCommand(interaction, client) {
                 return await interaction.followUp(`Failed to penalise user due to database error`);
 
             return await interaction.followUp(
-                `${userId} has been penalised for ${amount} XP\nReason for penalisation: ${reason}`,
+                `${userId} has been penalised for ${amount} MXP\nReason for penalisation: ${reason}`,
             );
         }
     }

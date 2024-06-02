@@ -40,10 +40,11 @@ async function executeCommand(interaction, client) {
         });
     await saveToDb(userData);
 
+    const userAvatarUrl = (await client.users.fetch(extractId(userId))).displayAvatarURL();
     const profileEmbed = new EmbedBuilder()
         .setTitle("Profile")
         .setColor(EMBED_COLOR)
-        .setThumbnail((await client.users.fetch(extractId(userId))).displayAvatarURL())
+        .setThumbnail(userAvatarUrl)
         .addFields({ name: "User", value: `${userId}` })
         .addFields({ name: "Points", value: `${userData.points}` })
         .addFields({ name: "Wallet Address", value: `${userData.walletAddress ?? ZERO_ADDRESS}` });
