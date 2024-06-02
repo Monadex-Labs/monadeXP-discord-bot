@@ -22,7 +22,7 @@ module.exports = {
                 try {
                     const owner = await message.guild.fetchOwner();
                     message.channel.send(
-                        `The server was created ${differenceInDays} days ago.\nThe owner is **<@${owner.id}>**.`,
+                        `The server was created ${differenceInDays} days ago\nThe owner is **<@${owner.id}>**`,
                     );
                 } catch (error) {
                     console.error(error);
