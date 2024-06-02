@@ -25,15 +25,20 @@ async function executeCommand(interaction) {
         return await interaction.followUp("Failed to display leaderboard due to database error");
     }
 
-    let display = "";
-    const leaderboardEmbed = new EmbedBuilder().setTitle("Leaderboard").setColor(EMBED_COLOR);
-    let count = 1;
+    let leaderboardEmbed = new EmbedBuilder().setTitle("Leaderboard").setColor(EMBED_COLOR);
+    // check if there are users registered in the database
+    if (sortedUsers.length > 0) {
+        let display = "";
+        let count = 1;
 
-    sortedUsers.forEach((user) => {
-        display += `${count}. ${user.user} ${user.points}\n`;
-        count++;
-    });
-    leaderboardEmbed.addFields({ name: "Rankings", value: display });
+        sortedUsers.forEach((user) => {
+            display += `${count}. ${user.user} ${user.points}\n`;
+            count++;
+        });
+        leaderboardEmbed.addFields({ name: "Rankings", value: display });
+    } else {
+        leaderboardEmbed.setDescription("No users are on the leaderboard now. Check back later!");
+    }
 
     return await interaction.followUp({ embeds: [leaderboardEmbed] });
 }
