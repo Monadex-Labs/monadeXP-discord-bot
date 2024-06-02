@@ -22,7 +22,7 @@ async function executeCommand(interaction) {
         sortedUsers = await XPModel.find().sort({ points: -1 }).limit(LEADERBOARD_LIMIT);
     } catch (error) {
         console.error(error);
-        return await interaction.reply("Failed to display leaderboard due to database error");
+        return await interaction.followUp("Failed to display leaderboard due to database error");
     }
 
     let display = "";
