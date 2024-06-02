@@ -2,8 +2,6 @@
 const { Client, Collection, GatewayIntentBits } = require("discord.js");
 const fs = require("fs");
 const dotenv = require("dotenv");
-const { process } = require("process");
-
 dotenv.config(); // Load environment variables from .env file
 
 // Initialize Discord client with intents required for the bot to function properly
