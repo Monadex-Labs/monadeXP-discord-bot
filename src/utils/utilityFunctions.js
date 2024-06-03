@@ -19,7 +19,8 @@ async function userExists(client, userId) {
 async function sendDirectMessage(client, userId, message) {
     let user;
     try {
-        await client.users.fetch(userId).send(message);
+        const user = await client.users.fetch(userId);
+        await user.send(message);
         return true;
     } catch (error) {
         console.error(error);
