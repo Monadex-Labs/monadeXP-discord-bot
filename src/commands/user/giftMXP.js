@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { extractId, userExists, sendDirectMessage } = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const XPModel = require("../../schemas/XPModel");
 
@@ -69,6 +69,9 @@ async function executeCommand(interaction, client) {
     const savedRecipientData = await saveToDb(recipientData);
     if (!savedRecipientData)
         return await interaction.followUp(`Failed to gift MXP due to database error`);
+
+    const reply = `${interaction.member.displayName} has sent you ${amount} MXP on the Monadex server`;
+    await sendDirectMessage(client, extractId(userId), reply);
 
     return await interaction.followUp(`${senderId} has gifted ${amount} MXP to ${userId}.`);
 }

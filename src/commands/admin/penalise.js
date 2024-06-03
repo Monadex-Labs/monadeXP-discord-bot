@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { extractId, userExists } = require("../../utils/utilityFunctions");
+const { extractId, userExists, sendDirectMessage } = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const { ADMIN_ROLE } = require("../../utils/data");
 
@@ -67,6 +67,11 @@ async function executeCommand(interaction, client) {
             const saved = await saveToDb(userData);
             if (!saved)
                 return await interaction.followUp(`Failed to penalise user due to database error`);
+
+            const reply =
+                `${interaction.member.displayName} has penalised you for ${amount} MXP on the Monadex server` +
+                `\nReason: ${reason}`;
+            await sendDirectMessage(client, extractId(userId), reply);
 
             return await interaction.followUp(
                 `${userId} has been penalised for ${amount} MXP\nReason for penalisation: ${reason}`,

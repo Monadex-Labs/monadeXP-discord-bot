@@ -16,7 +16,20 @@ async function userExists(client, userId) {
     return false;
 }
 
+async function sendDirectMessage(client, userId, message) {
+    let user;
+    try {
+        await client.users.fetch(userId).send(message);
+        return true;
+    } catch (error) {
+        console.error(error);
+    }
+
+    return false;
+}
+
 module.exports = {
     extractId,
     userExists,
+    sendDirectMessage,
 };
