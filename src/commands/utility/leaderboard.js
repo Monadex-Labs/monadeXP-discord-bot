@@ -31,23 +31,28 @@ async function executeCommand(interaction) {
     let leaderboardEmbed = new EmbedBuilder().setTitle("Leaderboard").setColor(EMBED_COLOR);
 
     // add the deposited amount to the user's total point balance
-    users.forEach(async (user) => {
-        let userBankData = await findOneFromDb({ user: user.user }, BankModel);
-        if (userBankData) {
-            const interestAccrued = getInterestAccrued(
-                userBankData.depositedPoints,
-                Math.floor(Date.now() / 1000) - userBankData.lastDepositTimestamp,
-            );
-            user.points = userBankData.depositedPoints + interestAccrued;
-        }
-    });
+    let updatedUsers = await Promise.all(
+        users.map(async (user) => {
+            let userBankData = await findOneFromDb({ user: user.user }, BankModel);
+            if (userBankData) {
+                const interestAccrued = getInterestAccrued(
+                    userBankData.depositedPoints,
+                    Math.floor(Date.now() / 1000) - userBankData.lastDepositTimestamp,
+                );
+                user.points += userBankData.depositedPoints + interestAccrued;
+                user.points = Math.floor(user.points);
+            }
+            return user;
+        }),
+    );
+
     // sort users based on the amount of points they have in descending order
-    users.sort((user1, user2) => -(user1.points - user2.points));
+    updatedUsers.sort((user1, user2) => -(user1.points - user2.points));
 
     // create a display string for the embed
     let display = "";
     for (let count = 0; count < users.length && count < LEADERBOARD_LIMIT; count++) {
-        display += `${count + 1}. ${users[count].user} ${users[count].points}\n`;
+        display += `${count + 1}. ${updatedUsers[count].user} ${updatedUsers[count].points}\n`;
     }
     leaderboardEmbed.addFields({ name: "Rankings", value: display });
 

@@ -2,7 +2,7 @@ const ADMIN_ROLE = "1245068458891415562";
 const EMBED_COLOR = "#8133FF";
 const LEADERBOARD_LIMIT = 10;
 const SECONDS_IN_A_YEAR = 365 * 24 * 60 * 60;
-const INTEREST_RATE_PER_ANNUM = 100000 / SECONDS_IN_A_YEAR; // 10% per annum
+const INTEREST_RATE_PER_ANNUM = 0.1 / SECONDS_IN_A_YEAR; // 10% per annum
 
 module.exports = {
     ADMIN_ROLE,
