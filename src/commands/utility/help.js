@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, AttachmentBuilder, EmbedBuilder } = require("discord.js");
-const { EMBED_COLOR } = require("../../utils/data");
+const { EMBED_COLOR, INTEREST_RATE_PER_ANNUM, SECONDS_IN_A_YEAR } = require("../../utils/data");
 
 /**
  * Slash Command: /help
@@ -33,6 +33,14 @@ async function executeCommand(interaction) {
         .addFields({
             name: "/gift-xp",
             value: "Allows you to gift some of your MXP to another user",
+        })
+        .addFields({
+            name: "/deposit",
+            value: `You can deposit your MXP into the bank and earn interest at a rate of ${INTEREST_RATE_PER_ANNUM * 100 * SECONDS_IN_A_YEAR} % per annum`,
+        })
+        .addFields({
+            name: "/withdraw",
+            value: "Withdraw your MXP from the bank along with any accrued interest",
         })
         .addFields({
             name: "/set-wallet-address",

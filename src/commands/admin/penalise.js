@@ -1,7 +1,13 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { extractId, userExists, sendDirectMessage } = require("../../utils/utilityFunctions");
+const {
+    extractId,
+    isValidNumber,
+    userExists,
+    sendDirectMessage,
+    hasPermission,
+} = require("../../utils/utilityFunctions");
+const XPModel = require("../../schemas/XPModel");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
-const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
  * Slash Command: /penalise [user] [amount]
@@ -38,11 +44,11 @@ async function executeCommand(interaction, client) {
     const reason = interaction.options.getString("reason");
 
     // check if the user has the right role to use this command
-    if (!interaction.member.roles.cache.some((role) => role.id === ADMIN_ROLE))
+    if (!hasPermission(interaction))
         return await interaction.followUp("You don't have permission to use this command");
 
     // ensure amount is an integer and greater than 0
-    if (!Number.isInteger(amount) || amount <= 0)
+    if (!isValidNumber(amount))
         return await interaction.followUp("Please enter a valid whole number for the amount");
 
     // check if the userId is a valid guild member
@@ -50,7 +56,7 @@ async function executeCommand(interaction, client) {
     if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
 
     // check if the user exists in the database
-    const userData = await findOneFromDb({ user: userId });
+    const userData = await findOneFromDb({ user: userId }, XPModel);
     if (!userData) return await interaction.followUp(`${userId} doesn't have any XP`);
     else {
         // check if the balance is less than the penalty amount
@@ -68,6 +74,7 @@ async function executeCommand(interaction, client) {
             if (!saved)
                 return await interaction.followUp(`Failed to penalise user due to database error`);
 
+            // notify the user about the MXP penalisation
             const reply =
                 `${interaction.member.displayName} has penalised you for ${amount} MXP on the Monadex server` +
                 `\nReason: ${reason}`;

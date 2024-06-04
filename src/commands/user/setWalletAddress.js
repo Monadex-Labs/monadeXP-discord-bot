@@ -27,7 +27,7 @@ async function executeCommand(interaction) {
     const walletAddress = interaction.options.getString("address");
     const userId = `<@${interaction.member.id}>`;
 
-    let userData = await findOneFromDb({ user: userId });
+    let userData = await findOneFromDb({ user: userId }, XPModel);
     !userData
         ? (userData = new XPModel({
               user: userId,

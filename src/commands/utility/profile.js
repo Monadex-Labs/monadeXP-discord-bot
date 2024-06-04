@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
-const { extractId, userExists } = require("../../utils/utilityFunctions");
+const BankModel = require("../../schemas/BankModel");
+const { extractId, userExists, getInterestAccrued } = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 const { EMBED_COLOR } = require("../../utils/data");
@@ -32,7 +33,7 @@ async function executeCommand(interaction, client) {
     const exists = await userExists(client, extractId(userId));
     if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
 
-    let userData = await findOneFromDb({ user: userId });
+    let userData = await findOneFromDb({ user: userId }, XPModel);
     if (!userData)
         userData = new XPModel({
             user: userId,
@@ -40,14 +41,30 @@ async function executeCommand(interaction, client) {
         });
     await saveToDb(userData);
 
+    let userBankData = await findOneFromDb({ user: userId }, BankModel);
+    let depositedAmount = 0;
+    let interestAccrued = 0;
+    if (userBankData) {
+        depositedAmount = userBankData.depositedPoints;
+        interestAccrued = getInterestAccrued(
+            userBankData.depositedPoints,
+            Math.floor(Date.now() / 1000) - userBankData.lastDepositTimestamp,
+        );
+    }
+
     const userAvatarUrl = (await client.users.fetch(extractId(userId))).displayAvatarURL();
     const profileEmbed = new EmbedBuilder()
         .setTitle("Profile")
         .setColor(EMBED_COLOR)
         .setThumbnail(userAvatarUrl)
         .addFields({ name: "User", value: `${userId}` })
-        .addFields({ name: "Points", value: `${userData.points}` })
-        .addFields({ name: "Wallet Address", value: `${userData.walletAddress ?? ZERO_ADDRESS}` });
+        .addFields({ name: "MXP", value: `${userData.points}` })
+        .addFields({ name: "Bank Deposit", value: `${depositedAmount}` })
+        .addFields({ name: "Interest Accrued", value: `${interestAccrued}` })
+        .addFields({
+            name: "Wallet Address",
+            value: `${userData.walletAddress ?? ZERO_ADDRESS}`,
+        });
 
     return await interaction.followUp({ embeds: [profileEmbed] });
 }

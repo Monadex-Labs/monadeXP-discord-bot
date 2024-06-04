@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
+const BankModel = require("../../schemas/BankModel");
 const { EMBED_COLOR, LEADERBOARD_LIMIT } = require("../../utils/data");
+const { getInterestAccrued } = require("../../utils/utilityFunctions");
+const { findManyFromDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 
 /**
  * Slash Command: /leaderboard
@@ -16,29 +19,37 @@ async function executeCommand(interaction) {
     // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
 
-    // get 20 users with the highest XP from the database
-    let sortedUsers;
+    // get users from the database
+    let users;
     try {
-        sortedUsers = await XPModel.find().sort({ points: -1 }).limit(LEADERBOARD_LIMIT);
+        users = await findManyFromDb(XPModel);
     } catch (error) {
         console.error(error);
         return await interaction.followUp("Failed to display leaderboard due to database error");
     }
 
     let leaderboardEmbed = new EmbedBuilder().setTitle("Leaderboard").setColor(EMBED_COLOR);
-    // check if there are users registered in the database
-    if (sortedUsers.length > 0) {
-        let display = "";
-        let count = 1;
 
-        sortedUsers.forEach((user) => {
-            display += `${count}. ${user.user} ${user.points}\n`;
-            count++;
-        });
-        leaderboardEmbed.addFields({ name: "Rankings", value: display });
-    } else {
-        leaderboardEmbed.setDescription("No users are on the leaderboard now. Check back later!");
+    // add the deposited amount to the user's total point balance
+    users.forEach(async (user) => {
+        let userBankData = await findOneFromDb({ user: user.user }, BankModel);
+        if (userBankData) {
+            const interestAccrued = getInterestAccrued(
+                userBankData.depositedPoints,
+                Math.floor(Date.now() / 1000) - userBankData.lastDepositTimestamp,
+            );
+            user.points = userBankData.depositedPoints + interestAccrued;
+        }
+    });
+    // sort users based on the amount of points they have in descending order
+    users.sort((user1, user2) => -(user1.points - user2.points));
+
+    // create a display string for the embed
+    let display = "";
+    for (let count = 0; count < users.length && count < LEADERBOARD_LIMIT; count++) {
+        display += `${count + 1}. ${users[count].user} ${users[count].points}\n`;
     }
+    leaderboardEmbed.addFields({ name: "Rankings", value: display });
 
     return await interaction.followUp({ embeds: [leaderboardEmbed] });
 }

@@ -1,8 +1,13 @@
 const { SlashCommandBuilder } = require("discord.js");
 const XPModel = require("../../schemas/XPModel");
-const { extractId, userExists, sendDirectMessage } = require("../../utils/utilityFunctions");
+const {
+    extractId,
+    isValidNumber,
+    userExists,
+    sendDirectMessage,
+    hasPermission,
+} = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
-const { ADMIN_ROLE } = require("../../utils/data");
 
 /**
  * Slash Command: /allocate-mxp [user] [amount]
@@ -33,11 +38,11 @@ async function executeCommand(interaction, client) {
     const amount = interaction.options.getNumber("amount");
 
     // check if the user has the right role to use this command
-    if (!interaction.member.roles.cache.some((role) => role.id === ADMIN_ROLE))
+    if (!hasPermission(interaction))
         return await interaction.followUp("You don't have permission to use this command");
 
     // ensure amount is an integer and greater than 0
-    if (!Number.isInteger(amount) || amount <= 0)
+    if (!isValidNumber(amount))
         return await interaction.followUp("Please enter a valid whole number for the amount");
 
     // check if the userId is a valid guild member
@@ -45,7 +50,7 @@ async function executeCommand(interaction, client) {
     if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
 
     // create user if the userId doesn't exist on the database
-    let userData = await findOneFromDb({ user: userId });
+    let userData = await findOneFromDb({ user: userId }, XPModel);
     !userData
         ? (userData = new XPModel({
               user: userId,
@@ -57,6 +62,7 @@ async function executeCommand(interaction, client) {
     const saved = await saveToDb(userData);
     if (!saved) return await interaction.followUp(`Failed to allocate MXP due to database error`);
 
+    // notify the user about the MXP allocation
     const reply = `${interaction.member.displayName} has allocated ${amount} MXP to you on the Monadex server`;
     await sendDirectMessage(client, extractId(userId), reply);
 

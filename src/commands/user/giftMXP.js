@@ -1,5 +1,10 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { extractId, userExists, sendDirectMessage } = require("../../utils/utilityFunctions");
+const {
+    extractId,
+    isValidNumber,
+    userExists,
+    sendDirectMessage,
+} = require("../../utils/utilityFunctions");
 const { saveToDb, findOneFromDb } = require("../../utils/dbUtilityFunctions");
 const XPModel = require("../../schemas/XPModel");
 
@@ -37,7 +42,7 @@ async function executeCommand(interaction, client) {
     const amount = interaction.options.getNumber("amount");
 
     // ensure amount is an integer and greater than 0
-    if (!Number.isInteger(amount) || amount <= 0)
+    if (!isValidNumber(amount))
         return await interaction.followUp("Please enter a valid whole number for the amount.");
 
     if (userId === senderId) return await interaction.followUp("You cannot gift MXP to yourself");
@@ -47,7 +52,7 @@ async function executeCommand(interaction, client) {
     if (!exists) return await interaction.followUp(`${userId} doesn't exist`);
 
     // ensure sender exists and has enough balance
-    const senderData = await findOneFromDb({ user: senderId });
+    const senderData = await findOneFromDb({ user: senderId }, XPModel);
     if (!senderData || senderData.points < amount)
         return await interaction.followUp(`You don't have sufficient balance`);
 
@@ -55,7 +60,7 @@ async function executeCommand(interaction, client) {
     senderData.points -= amount;
 
     // create the recipient if the userId doesn't exist in the database
-    let recipientData = await findOneFromDb({ user: userId });
+    let recipientData = await findOneFromDb({ user: userId }, XPModel);
     !recipientData
         ? (recipientData = new XPModel({
               user: userId,
@@ -70,6 +75,7 @@ async function executeCommand(interaction, client) {
     if (!savedRecipientData)
         return await interaction.followUp(`Failed to gift MXP due to database error`);
 
+    // notify the recipient about the MXP gifting
     const reply = `${interaction.member.displayName} has sent you ${amount} MXP on the Monadex server`;
     await sendDirectMessage(client, extractId(userId), reply);
 

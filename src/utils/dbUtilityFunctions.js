@@ -1,5 +1,3 @@
-const XPModel = require("../schemas/XPModel");
-
 async function saveToDb(dbObject) {
     try {
         await dbObject.save();
@@ -11,9 +9,9 @@ async function saveToDb(dbObject) {
     return false;
 }
 
-async function findOneFromDb(params) {
+async function findOneFromDb(params, model) {
     try {
-        return await XPModel.findOne(params);
+        return await model.findOne(params);
     } catch (error) {
         console.error(error);
     }
@@ -21,9 +19,9 @@ async function findOneFromDb(params) {
     return null;
 }
 
-async function findManyFromDb(params) {
+async function findManyFromDb(model) {
     try {
-        return await XPModel.find(params);
+        return await model.find();
     } catch (error) {
         console.error(error);
     }
