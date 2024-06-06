@@ -1,4 +1,4 @@
-const { ADMIN_ROLE, INTEREST_RATE_PER_ANNUM } = require("./data");
+const { ALLOWED_ROLES, INTEREST_RATE_PER_ANNUM } = require("./data");
 
 // generic utility functions
 
@@ -40,7 +40,8 @@ async function sendDirectMessage(client, userId, message) {
 }
 
 function hasPermission(interaction) {
-    if (!interaction.member.roles.cache.some((role) => role.id === ADMIN_ROLE)) return false;
+    if (!interaction.member.roles.cache.some((role) => ALLOWED_ROLES.includes(role.id)))
+        return false;
     return true;
 }
 
