@@ -10,7 +10,6 @@
 <br />
 <div align="center">
   <a href="https://github.com/monadex-labs/monadexp-discord-bot">
-    <!-- <img src="./src/assets/monadexp.png" alt="Logo" width="300"> -->
     <img src="./src/assets/monadexLogo.png" alt="Logo" width="80">
   </a>
 
@@ -19,7 +18,7 @@
   <p align="center">
     Discord bot for Monadex's official XP campaign
     <br />
-    <a href="https://github.com/monadex-labs/monadexp-discord-bot"><strong>Explore the docs »</strong></a>
+    <a href="https://monadex.gitbook.io/monadex/features/monadexp-campaign"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://discord.gg/gUG5fhF69D">View Demo</a>
