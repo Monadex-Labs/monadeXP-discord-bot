@@ -1,168 +1,167 @@
-# Discord Bot Template
+<!-- PROJECT SHIELDS -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-Creating a Discord bot has never been easier! This template comes slash command ready with a simple set up to get your bot up and running yourself!
 
-## Features
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/monadex-labs/monadexp-discord-bot">
+    <!-- <img src="./src/assets/monadexp.png" alt="Logo" width="300"> -->
+    <img src="./src/assets/monadexLogo.png" alt="Logo" width="80">
+  </a>
 
-* Easy to setup and run
-* Discord.js v.14
-* Simple Bang Command setup
-* Rotatable bot status
-* Slash Command ready
-* Database Integration
-* And more!
+  <h3 align="center">MonadeXP Discord Bot</h3>
 
-## Bots Created Using this Template
+  <p align="center">
+    Discord bot for Monadex's official XP campaign
+    <br />
+    <a href="https://github.com/monadex-labs/monadexp-discord-bot"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://discord.gg/gUG5fhF69D">View Demo</a>
+    ·
+    <a href="https://github.com/monadex-labs/monadexp-discord-bot/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/monadex-labs/monadexp-discord-bot/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
-[Text.re](https://top.gg/bot/1132849339530743960)
-[N0RM](https://discord.com/api/oauth2/authorize?client_id=1197103539512680488&permissions=1240105167991&scope=bot)
 
-## Setup
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-To get this project up and running on your local machine, follow these steps:
 
-### 1. Clone the Repository
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-First, you need to clone this repository to your local machine or fork it to your GitHub account:
+Monadex's official XP program will run in three seasons until the mainnet launch. MXP can be earned by actively engaging the community, preforming tasks/quests, contributing to the project, etc. After launch, MXP will be converted to $MDX (Monadex's governance token) at a ratio which will be decided later on. You can learn more about the XP program [here](https://monadex.gitbook.io/monadex/features/monadexp-campaign).
 
-* To clone the repository, run:
+With the help of the discord bot, users can track their MXP balances, gift MXP to others, check the leaderboard, and use the bank to earn interest. The bot has some admin exclusive commands for allocating MXP or penalising users for suspicious acts.
 
-  ```bash
-  git clone https://github.com/accidental-feature/discord-bot-template.git
-  ```
 
-* To fork the repository, click on the 'Fork' button at the top of this page and then clone your forked repository as shown above.
+### Built With
 
-### 2. Install Node.js Packages
+- ![JavaScript][javascript-url]
+- ![Discord.js](https://img.shields.io/badge/-DISCORD.JS-%235865F2.svg?style=for-the-badge)
+- ![npm][npm-url]
 
-Navigate to the cloned repository's directory and install the required Node.js packages:
 
-```bash
-cd discord-bot-template
-npm install
+<!-- GETTING STARTED -->
+## Getting Started
+
+### Prerequisites
+
+Ensure that you have git and node.js installed and configured on your system. 
+
+### Installation
+
+Clone the repo and cd into it
+
+```shell
+git clone https://github.com/monadex-labs/monadexp-discord-bot
+cd monadexp-discord-bot
 ```
 
-### 3. Set Up a Discord Bot
+Install the project's dependencies
 
-To set up a Discord bot, follow these steps:
-
-* Go to the [Discord Developer Portal](https://discord.com/developers/applications).
-* Click on the 'New Application' button. Give your application a name and create it.
-* Navigate to the 'Bot' tab and click 'Add Bot'. Confirm the creation.
-* Under the 'TOKEN' section, click 'Copy' to copy your bot's token (you'll need this for the .env file).
-
-#### Invite the Bot to Your Server
-
-* In the Discord Developer Portal, navigate to the 'OAuth2' tab.
-* Under 'SCOPES', select 'bot'.
-* Choose the appropriate permissions for your bot under 'BOT PERMISSIONS'.
-* Copy the generated URL under 'SCOPES' and paste it into your web browser.
-* Select a server to invite your bot to and authorize it.
-
-### 4. Configure the Bot Token
-
-Create a `.env` file in the root of your cloned repository and add your bot token:
-
-```env
-BOT_TOKEN=Your_Discord_Bot_Token
+```shell
+npm install .
 ```
 
-Replace `Your_Discord_Bot_Token` with the token you copied from the Discord Developer Portal.
+Fill in all the necessary fields in the `.env.example` and rename it to `.env`. Then run the following command to start the bot on your server
 
-### 5. Additional Configurations
-
-#### Bot's Client ID
-
-To find and configure your bot's client ID:
-
-##### Find the Client ID
-
-* Go to the [Discord Developer Portal](https://discord.com/developers/applications).
-* Open your application.
-* The 'Client ID' can be found under the 'Application Information' section.
-
-##### Add the Client ID to the Project
-
-* Open the file `src/functions/HandleCommands.js` in your project.
-* Modify the `clientId` variable at the top of the file:
-
-  ```javascript
-  const clientId = 'YOUR_CLIENT_ID';
-  ```
-
-#### Guild ID (Optional)
-
-If you wish to use specific features tied to a particular server (guild), you will need its ID.
-
-##### Find the Guild ID
-
-* Open Discord and go to your server.
-* Right-click on the server name and select 'Copy ID'. If you don't see this option, enable 'Developer Mode' in your Discord settings under 'Appearance' -> 'Advanced'.
-
-##### Add the Guild ID to the Project
-
-* Open the file `src/functions/HandleCommands.js`.
-* Modify the `guildId` variable:
-
-  ```javascript
-  const guildId = 'YOUR_GUILD_ID';
-  ```
-
-* Replace YOUR_GUILD_ID with the guild ID you copied. If you prefer not to use a specific guild ID, you can leave it as an empty string or remove it.
-
-Ensure that you save the changes to `src/functions/HandleCommands.js` after modifying it. This configuration is crucial for the bot's interaction with Discord's API specific to your application and server.
-
-#### Setup MongoDB Integration
-
-1. **Create a MongoDB Account**:
-   - Go to [MongoDB's website](https://www.mongodb.com/) and sign up for an account.
-   - Choose the free tier for a simple start, which is sufficient for basic bot functionalities.
-
-2. **Create a Cluster**:
-   - After logging in, create a new cluster. Choose the free tier option.
-   - Select a cloud provider and a region that is closest to you for better performance.
-   - Click on "Create Cluster" at the bottom of the page.
-
-3. **Configure Database Access**:
-   - Navigate to the "Database Access" section under "Security".
-   - Add a new database user with read and write privileges. Remember the username and password; you will need them to connect your bot to the database.
-
-4. **Configure Network Access**:
-   - Go to the "Network Access" section.
-   - Add a new IP address. For development, you can allow access from anywhere by using `0.0.0.0/0`.
-
-5. **Get Your Database Connection URL**:
-   - Once your cluster is set up, go to the "Clusters" section.
-   - Click on "Connect" -> "Connect your application".
-   - Choose the driver and version (usually Node.js) and copy the connection string provided.
-
-6. **Configure the Bot to Use MongoDB**:
-   - In your project, create or update your `.env` file with the MongoDB connection string:
-
-     ```env
-     MONGODB_URI=Your_MongoDB_Connection_String
-     ```
-
-   - Replace `Your_MongoDB_Connection_String` with the connection string you copied from MongoDB. Replace `<password>` with the database user's password you created earlier, and change `myFirstDatabase` to your preferred database name.
-
-### 6. Run the Project
-
-Finally, you can run the project using:
-
-```bash
-node .
+```shell
+npm run bot
 ```
 
-OR
+That's it, you should be ready to go now.
 
-```bash
-nodemon
-```
 
-Your Discord bot should now be online and functioning in your server!
+<!-- USAGE EXAMPLES -->
+## Usage
 
-## Questions/Suggestions/Bug Reports
+In any of the Monadex's official discord channels, you can use `/help` to learn about the bot and the commands accessible to you.
 
-**Please read the [Issues List](https://github.com/accidental-feature/discord-bot-template/issues) before suggesting a feature**. If you have a question, need troubleshooting help, or want to brainstorm a new feature, please start a [Discussion](https://github.com/accidental-feature/discord-bot-template/discussions). If you'd like to suggest a feature or report a reproducible bug, please open an [Issue](https://github.com/accidental-feature/discord-bot-template/issues) on this repository.
 
-### Join the [VARIETY Discord](https://discord.gg/d93DZHqz39)
+<!-- ROADMAP -->
+## Roadmap
+
+- [x] Setup repo
+- [x] Add slash commands
+  - [x] Add admin commands
+  - [x] Add user commands
+  - [x] Add a bank system to earn interest on MXP
+- [x] Add a good README.md
+
+See the [open issues](https://github.com/monadex-labs/monadexp-discord-bot/issues) for a full list of proposed features (and known issues).
+
+
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+<!-- LICENSE -->
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+
+<!-- CONTACT -->
+## Contact
+
+Here's a gateway to Monadex's socials
+
+[![Linktree](https://img.shields.io/badge/linktree-1de9b6?style=for-the-badge&logo=linktree&logoColor=white)](https://linktr.ee/Monadex)
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[contributors-shield]: https://img.shields.io/github/contributors/monadex-labs/monadexp-discord-bot.svg?style=for-the-badge
+[contributors-url]: https://github.com/monadex-labs/monadexp-discord-bot/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/monadex-labs/monadexp-discord-bot.svg?style=for-the-badge
+[forks-url]: https://github.com/monadex-labs/monadexp-discord-bot/network/members
+[stars-shield]: https://img.shields.io/github/stars/monadex-labs/monadexp-discord-bot.svg?style=for-the-badge
+[stars-url]: https://github.com/monadex-labs/monadexp-discord-bot/stargazers
+[issues-shield]: https://img.shields.io/github/issues/monadex-labs/monadexp-discord-bot.svg?style=for-the-badge
+[issues-url]: https://github.com/monadex-labs/monadexp-discord-bot/issues
+[license-shield]: https://img.shields.io/github/license/monadex-labs/monadexp-discord-bot.svg?style=for-the-badge
+[license-url]: https://github.com/monadex-labs/monadexp-discord-bot/blob/master/LICENSE.txt
+[javascript-url]: https://img.shields.io/badge/Javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E
+[npm-url]: https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white&style=for-the-badge
+[linktree-url]: https://linktr.ee/
