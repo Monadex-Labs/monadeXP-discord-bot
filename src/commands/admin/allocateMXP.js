@@ -27,6 +27,9 @@ const commandData = new SlashCommandBuilder()
     )
     .addNumberOption((option) =>
         option.setName("amount").setDescription("The MXP amount").setRequired(true),
+    )
+    .addStringOption((option) =>
+        option.setName("reason").setDescription("The penalisation reason").setRequired(false),
     );
 
 // command execution
@@ -36,6 +39,7 @@ async function executeCommand(interaction, client) {
 
     const userId = interaction.options.getString("user");
     const amount = interaction.options.getNumber("amount");
+    const reason = interaction.options.getString("reason");
 
     // check if the user has the right role to use this command
     if (!hasPermission(interaction))
@@ -63,11 +67,11 @@ async function executeCommand(interaction, client) {
     if (!saved) return await interaction.followUp(`Failed to allocate MXP due to database error`);
 
     // notify the user about the MXP allocation
-    const reply = `${interaction.member.displayName} has allocated ${amount} MXP to you on the Monadex server`;
+    const reply = `${interaction.member.displayName} has allocated ${amount} MXP to you on the Monadex server\nReason: ${reason}`;
     await sendDirectMessage(client, extractId(userId), reply);
 
     return await interaction.followUp(
-        `<@${interaction.member.id}>, you have sent ${amount} MXP to ${userId}`,
+        `<@${interaction.member.id}>, you have sent ${amount} MXP to ${userId}\nReason: ${reason}`,
     );
 }
 
