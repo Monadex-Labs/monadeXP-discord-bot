@@ -9,7 +9,7 @@ To deploy the bot docker image follow these steps:
 3. Build the image
 `sudo docker build -t bot-image .`
 4. Deploy the bot container with the new image
-`sudo docker run -d bot-image --name bot`
+`sudo docker run -d --name bot --restart=always bot-image`
 
 ## Redeploying
 First we will need to do some cleanup and then we rebuild the container image and process:
