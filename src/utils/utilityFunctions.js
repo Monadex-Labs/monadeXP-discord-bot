@@ -15,6 +15,7 @@ function getInterestAccrued(amount, timeElapsedInSeconds) {
     return amount * timeElapsedInSeconds * INTEREST_RATE_PER_ANNUM;
 }
 
+
 async function userExists(client, userId) {
     let user;
     try {

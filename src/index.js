@@ -24,13 +24,13 @@ const eventFiles = fs.readdirSync("./src/events").filter((file) => file.endsWith
 const commandFolders = fs.readdirSync("./src/commands");
 
 // Retrieve necessary IDs and token from environment variables
-const isDev = process.env.DEVELOPMENT; // Check if running in development mode
+const mode = process.env.DEVELOPMENT ; // Check if running in development mode
 const clientId = process.env.CLIENT_ID; // Client ID for the bot
 const botToken = process.env.BOT_TOKEN; // Token for the bot
 // Additional testing environment variables
 const testToken = process.env.TEST_TOKEN; // Token for testing
 const testClientId = process.env.TEST_CLIENT_ID; // Client ID for testing
-const guildId = process.env.GUILD_ID; // Specific guild ID for testing or guild-specific commands
+const testGuildId = process.env.TEST_GUILD_ID; // Specific guild ID for testing or guild-specific commands
 
 // Main bot initialization logic wrapped in an async function
 (async () => {
@@ -43,10 +43,10 @@ const guildId = process.env.GUILD_ID; // Specific guild ID for testing or guild-
     client.handleEvents(eventFiles, "./src/events");
 
     // Check if running in development mode
-    if (isDev === "true") {
+    if (mode) {
         console.log("Running in development mode.");
         // Load guild-specific commands if in development mode
-        client.handleCommands(testToken, commandFolders, "./src/commands", testClientId, guildId);
+        client.handleCommands(testToken, commandFolders, "./src/commands", testClientId);
         client.login(testToken); // Log in using the test token
     } else {
         console.log("Running in production mode.");

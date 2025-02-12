@@ -24,7 +24,15 @@ module.exports = (client) => {
             for (const file of commandFiles) {
                 // Import the command module
                 const command = require(`../commands/${folder}/${file}`);
+                
+                // Log the command object to debug
+                console.log(`Loading command: ${file}`, command);
                 // Add the command to the client's command collection
+                if (!command.data || !command.data.name) {
+                    console.error(`Command ${file} is missing a valid data or name property.`);
+                    continue; // Skip this command
+                }
+                
                 client.commands.set(command.data.name, command);
                 // Prepare the command data for registration with Discord's API
                 client.commandArray.push(command.data.toJSON());
