@@ -9,7 +9,7 @@ module.exports = (client) => {
         commandFolders,
         path,
         clientId,
-        guildId = "1244759142401446069",
+        guildId,
     ) => {
         // Initialize an array to hold the commands for registration
         client.commandArray = [];
