@@ -1,4 +1,4 @@
-export const FaucetAbi = [
+const FaucetAbi = [
     {
        "inputs":[
           
@@ -574,3 +574,7 @@ export const FaucetAbi = [
        "type":"function"
     }
  ]
+
+module.exports = {
+  FaucetAbi
+}

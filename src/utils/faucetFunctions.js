@@ -1,29 +1,6 @@
-const { publicClient } = require('./ViemClient')
+const { publicClient, walletClient } = require('./ViemClient')
 const { CONTRACT_ADDRESS } = require('./data')
-// async function createFaucet(faucetDetails, admin_account_address) {
-//    try {
-//     const { request } = await publicClient.simulateContract({
-//         account : admin_account_address,
-//         address: CONTRACT_ADDRESS,
-//         abi: wagmiAbi,
-//         functionName: 'createFaucet',
-//         args: [faucetDetails]
-//       })
-//       const result = await walletClient.writeContract(request)
-      
-//       return {
-//         success: true,
-//         message: 'Faucet created successfully!',
-//         result,
-//       }
-//     } catch (error) {
-//         return {
-//             success: false,
-//             error: error.message || error,
-//         }
-//    }
-// }
-
+const { FaucetAbi } = require('./abis/tokenFaucetAbi')
 
 module.exports = {
     collectTokensFromFaucet : async function collectTokensFromFaucet(_token, _to) {
@@ -31,16 +8,23 @@ module.exports = {
           const { request } = await publicClient.simulateContract({
               account : _to,
               address: CONTRACT_ADDRESS,
-              abi: wagmiAbi,
+              abi: FaucetAbi,
               functionName: 'collectTokensFromFaucet',
               args: [_token, _to]
             })
-          await walletClient.writeContract(request)
+
+          // Sign the transaction first
+          const signature = await walletClient.signTransaction(request)
+          
+          // Send the signed transaction
+          const hash = await publicClient.sendRawTransaction({
+              serializedTransaction: signature
+          })
             
             return {
               success: true,
-              message: 'tokens claimed successfully!',
-              result,
+              message: 'Tokens claimed successfully!',
+              hash,
             }
           } catch (error) {
               return {

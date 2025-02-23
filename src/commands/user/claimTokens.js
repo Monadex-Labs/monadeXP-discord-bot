@@ -1,7 +1,6 @@
 // claim faucet tokens command for use
 const { SlashCommandBuilder } = require("discord.js");
 const { collectTokensFromFaucet } = require("../../utils/faucetFunctions");
-const viem = require('viem')
 
 const commandData = new SlashCommandBuilder()
     .setName('claim-tokens')
@@ -24,10 +23,10 @@ const commandData = new SlashCommandBuilder()
 async function executeCommand(interaction) {
     // defer the reply to bypass discord's 3 sec restriction on bots
     await interaction.deferReply({ ephemeral: true });
-    const UserwalletAddress = interaction.options.getString("address");
+    const UserwalletAddress = interaction.options.getString("wallet");
     const tokenSelected = interaction.options.getString("select-token");
 
-  const result = await collectTokensFromFaucet(viem.stringToHex(tokenSelected), viem.stringToHex(UserwalletAddress));
+  const result = await collectTokensFromFaucet(tokenSelected, UserwalletAddress);
   
   if(result.error) {
     return await interaction.followUp(`Error: ${result.error}`);
