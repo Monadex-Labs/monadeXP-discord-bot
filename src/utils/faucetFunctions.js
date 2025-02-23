@@ -6,15 +6,15 @@ module.exports = {
     collectTokensFromFaucet : async function collectTokensFromFaucet(_token, _to) {
       try {
           const { request } = await publicClient.simulateContract({
-              account : _to,
+              account : '0xBC92D00c4EbF690ce3f4188b4De86fC9ea723D0c',
               address: CONTRACT_ADDRESS,
               abi: FaucetAbi,
               functionName: 'collectTokensFromFaucet',
               args: [_token, _to]
             })
-
           // Sign the transaction first
-          const signature = await walletClient.signTransaction(request)
+          const signature = await walletClient.signTransaction({...request, data: request.data,
+            to: CONTRACT_ADDRESS})
           
           // Send the signed transaction
           const hash = await publicClient.sendRawTransaction({
