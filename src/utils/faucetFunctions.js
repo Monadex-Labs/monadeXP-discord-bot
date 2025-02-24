@@ -1,23 +1,29 @@
-const { publicClient, walletClient } = require('./ViemClient')
+const { walletClient } = require('./ViemClient')
 const { CONTRACT_ADDRESS } = require('./data')
 const { FaucetAbi } = require('./abis/tokenFaucetAbi')
+const { encodeFunctionData } = require('viem')
 
 module.exports = {
     collectTokensFromFaucet : async function collectTokensFromFaucet(_token, _to) {
       try {
-          const { request } = await publicClient.simulateContract({
-              account : '0xBC92D00c4EbF690ce3f4188b4De86fC9ea723D0c',
-              address: CONTRACT_ADDRESS,
-              abi: FaucetAbi,
-              functionName: 'collectTokensFromFaucet',
-              args: [_token, _to]
-            })
+          // Encode the function data directly
+          const data = encodeFunctionData({
+            abi: FaucetAbi,
+            functionName: 'collectTokensFromFaucet',
+            args: [_token, _to]
+          })
+
+          const req = await walletClient.prepareTransactionRequest({
+            data: data, 
+            to: CONTRACT_ADDRESS,
+            value: 0n
+          })
+
           // Sign the transaction first
-          const signature = await walletClient.signTransaction({...request, data: request.data,
-            to: CONTRACT_ADDRESS})
+          const signature = await walletClient.signTransaction(req)
           
           // Send the signed transaction
-          const hash = await publicClient.sendRawTransaction({
+          const hash = await walletClient.sendRawTransaction({
               serializedTransaction: signature
           })
             

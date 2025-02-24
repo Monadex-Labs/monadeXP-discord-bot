@@ -11,9 +11,10 @@ const commandData = new SlashCommandBuilder()
           .setDescription('Select a token from the list')
           .setRequired(true)
           .addChoices(
-            { name: 'PEPE', value: '0x98133fc00f1A84d7AcB532cbdD5414AeC6D52513' },
-            // { name: 'Token 2', value: '0xAddress2' },
-            // { name: 'Token 3', value: '0xAddress3' }
+            { name: 'PEPE', value: '0xab1fA5cc0a7dB885BC691b60eBeEbDF59354434b' },
+            { name: 'TRUMP', value: '0x951832502F0667CD00E1d1dAF1b42d163D3f17Ac' },
+            { name: 'Moyaki', value: '0x59897686b2Dd2059b09642797EBeA3d21E6cE2d1' },
+            { name: 'Molandak', value: '0xe9f4c0093B4e94800487cad93FBBF7C3729ccf5c' },
           )
       ) 
     .addStringOption((option) =>
